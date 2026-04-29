@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5efe7;
+  --foreground: #211d1a;
+  --surface: rgba(255, 250, 244, 0.8);
+  --surface-strong: #fefcf9;
+  --muted: #6d6257;
+  --accent: #9d4f3a;
+  --accent-soft: #ead7ce;
+  --stroke: rgba(33, 29, 26, 0.12);
+  --font-body: "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-display: Garamond, "Palatino Linotype", serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-stroke: var(--stroke);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+* {
+  border-color: var(--stroke);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(157, 79, 58, 0.13), transparent 35%),
+    radial-gradient(circle at 80% 10%, rgba(234, 215, 206, 0.65), transparent 30%),
+    linear-gradient(180deg, #f9f3ec 0%, #f5efe7 52%, #f8f1e9 100%);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+::selection {
+  background: rgba(157, 79, 58, 0.2);
+}
+
+.font-display {
+  font-family: var(--font-display), serif;
+}
