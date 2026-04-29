@@ -18,3 +18,8 @@
 - Implemented the initial Prisma schema covering customer, admin, catalog, order, payment, shipment, and content entities.
 - Added a seed script and generated the initial SQL migration artifact.
 - Verified linting, type-checking, Prisma validation, client generation, and production build.
+
+### Milestone 5: Backend API foundation
+- Added shared backend utilities for API responses, error handling, sessions, JWT auth, RBAC, payments, notifications, and logging.
+- Implemented Phase 5 core REST routes for auth, catalog, customer profile, measurements, consultations, orders, payment actions, webhook placeholder handling, and admin dashboard metrics.
+- Verified the expanded backend surface with linting, type-checking, and production build checks.
