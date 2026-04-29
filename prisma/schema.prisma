@@ -1,0 +1,776 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
+}
+
+enum ConsultationStatus {
+  REQUESTED
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ConsultationChannel {
+  PHONE
+  VIDEO
+  IN_STUDIO
+  WHATSAPP
+}
+
+enum MeasurementProfileStatus {
+  DRAFT
+  CONFIRMED
+  ARCHIVED
+}
+
+enum FabricSourceType {
+  CUSTOMER_PROVIDED
+  PLATFORM_ASSISTED
+}
+
+enum FabricPickupStatus {
+  REQUESTED
+  SCHEDULED
+  IN_TRANSIT
+  RECEIVED
+  INSPECTED
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderStatus {
+  ORDER_PLACED
+  DESIGNER_ASSIGNED
+  CONSULTATION_SCHEDULED
+  MEASUREMENTS_PENDING
+  MEASUREMENTS_CONFIRMED
+  FABRIC_PENDING
+  FABRIC_PICKUP_SCHEDULED
+  FABRIC_RECEIVED
+  FABRIC_INSPECTION_PENDING
+  FABRIC_APPROVED
+  CUTTING
+  STITCHING
+  FINISHING
+  QUALITY_CHECK
+  PACKED
+  SHIPPED
+  DELIVERED
+  ALTERATION_REQUESTED
+  ALTERATION_IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentProvider {
+  RAZORPAY
+  STRIPE
+  MANUAL
+}
+
+enum PaymentMode {
+  BOOKING_AMOUNT
+  FULL_AMOUNT
+}
+
+enum RefundStatus {
+  REQUESTED
+  PROCESSED
+  FAILED
+  CANCELLED
+}
+
+enum ShipmentStatus {
+  PENDING
+  PACKED
+  SHIPPED
+  IN_TRANSIT
+  DELIVERED
+  RETURNED
+}
+
+enum AlterationStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum SupportTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum BannerStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CouponDiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum ServiceOptionType {
+  ADD_ON
+  STYLE_CHOICE
+  FIT
+  EMBELLISHMENT
+  OTHER
+}
+
+model User {
+  id                         String               @id @default(cuid())
+  email                      String               @unique
+  phone                      String?              @unique
+  passwordHash               String?
+  firstName                  String
+  lastName                   String
+  avatarUrl                  String?
+  status                     UserStatus           @default(ACTIVE)
+  emailVerifiedAt            DateTime?
+  phoneVerifiedAt            DateTime?
+  lastLoginAt                DateTime?
+  roleId                     String
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  role                       Role                 @relation(fields: [roleId], references: [id])
+  customerProfile            CustomerProfile?
+  addresses                  Address[]
+  consultations              Consultation[]       @relation("CustomerConsultations")
+  assignedConsultations      Consultation[]       @relation("AssignedDesignerConsultations")
+  orders                     Order[]              @relation("CustomerOrders")
+  designedOrders             Order[]              @relation("AssignedDesignerOrders")
+  qualityCheckedOrders       Order[]              @relation("QualityCheckManagerOrders")
+  designerNotesAuthored      DesignerNote[]       @relation("DesignerNoteAuthor")
+  payments                   Payment[]            @relation("CustomerPayments")
+  orderStatusChanges         OrderStatusHistory[] @relation("OrderStatusChangedBy")
+  tailorAssignments          TailorAssignment[]   @relation("TailorAssignments")
+  tailorAssignmentsMade      TailorAssignment[]   @relation("TailorAssignedBy")
+  alterationRequests         AlterationRequest[]  @relation("AlterationRequestedBy")
+  reviews                    Review[]             @relation("CustomerReviews")
+  supportTickets             SupportTicket[]      @relation("CustomerSupportTickets")
+  assignedSupportTickets     SupportTicket[]      @relation("AssignedSupportTickets")
+  notifications              Notification[]       @relation("UserNotifications")
+  auditLogs                  AuditLog[]           @relation("ActorAuditLogs")
+  blogPosts                  BlogPost[]           @relation("BlogAuthor")
+
+  @@index([roleId])
+}
+
+model Role {
+  id           String       @id @default(cuid())
+  name         String       @unique
+  description  String?
+  isSystemRole Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  users        User[]
+  permissions  Permission[]
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  label       String
+  description String?
+  module      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  roles       Role[]
+}
+
+model Address {
+  id              String         @id @default(cuid())
+  userId          String
+  label           String
+  recipientName   String
+  phone           String
+  line1           String
+  line2           String?
+  city            String
+  state           String
+  postalCode      String
+  country         String         @default("India")
+  isDefault       Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  user            User           @relation(fields: [userId], references: [id])
+  deliveryOrders  Order[]        @relation("DeliveryAddressOrders")
+  billingOrders   Order[]        @relation("BillingAddressOrders")
+  pickupOrders    Order[]        @relation("PickupAddressOrders")
+  fabricPickups   FabricPickup[] @relation("FabricPickupAddress")
+
+  @@index([userId])
+}
+
+model CustomerProfile {
+  id                      String                @id @default(cuid())
+  userId                  String                @unique
+  dateOfBirth             DateTime?
+  preferredContactChannel NotificationChannel?
+  notes                   String?
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  user                    User                  @relation(fields: [userId], references: [id])
+  measurementProfiles     MeasurementProfile[]
+}
+
+model MeasurementProfile {
+  id                  String                    @id @default(cuid())
+  customerProfileId   String
+  name                String
+  garmentContext      String?
+  isDefault           Boolean                   @default(false)
+  status              MeasurementProfileStatus  @default(DRAFT)
+  confirmedAt         DateTime?
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  customerProfile     CustomerProfile           @relation(fields: [customerProfileId], references: [id])
+  values              MeasurementValue[]
+  orderCustomizations OrderCustomization[]
+
+  @@index([customerProfileId])
+}
+
+model MeasurementValue {
+  id                   String             @id @default(cuid())
+  measurementProfileId String
+  key                  String
+  label                String
+  value                String
+  unit                 String             @default("inch")
+  sortOrder            Int                @default(0)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  measurementProfile   MeasurementProfile @relation(fields: [measurementProfileId], references: [id])
+
+  @@unique([measurementProfileId, key])
+}
+
+model Category {
+  id           String    @id @default(cuid())
+  name         String
+  slug         String    @unique
+  description  String?
+  heroImageUrl String?
+  isActive     Boolean   @default(true)
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  services     Service[]
+}
+
+model Service {
+  id                      String          @id @default(cuid())
+  categoryId              String
+  name                    String
+  slug                    String          @unique
+  shortDescription        String?
+  description             String?
+  startingPrice           Decimal         @db.Decimal(10, 2)
+  bookingAmount           Decimal?        @db.Decimal(10, 2)
+  currencyCode            String          @default("INR")
+  deliveryEstimateMinDays Int?
+  deliveryEstimateMaxDays Int?
+  fabricRequirementText   String?
+  measurementGuideText    String?
+  isFeatured              Boolean         @default(false)
+  isActive                Boolean         @default(true)
+  seoTitle                String?
+  seoDescription          String?
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+  category                Category        @relation(fields: [categoryId], references: [id])
+  options                 ServiceOption[]
+  styleTemplates          StyleTemplate[]
+  consultations           Consultation[]
+  orderItems              OrderItem[]
+  reviews                 Review[]        @relation("ServiceReviews")
+}
+
+model ServiceOption {
+  id                  String             @id @default(cuid())
+  serviceId           String
+  name                String
+  optionType          ServiceOptionType  @default(OTHER)
+  priceDelta          Decimal            @default(0) @db.Decimal(10, 2)
+  isRequired          Boolean            @default(false)
+  sortOrder           Int                @default(0)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  service             Service            @relation(fields: [serviceId], references: [id])
+  orderCustomizations OrderCustomization[]
+
+  @@index([serviceId])
+}
+
+model StyleTemplate {
+  id                  String               @id @default(cuid())
+  serviceId           String
+  name                String
+  slug                String?              @unique
+  imageUrl            String
+  thumbnailUrl        String?
+  description         String?
+  tags                String[]
+  isFeatured          Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  service             Service              @relation(fields: [serviceId], references: [id])
+  orderCustomizations OrderCustomization[]
+
+  @@index([serviceId])
+}
+
+model FabricItem {
+  id                  String               @id @default(cuid())
+  name                String
+  slug                String               @unique
+  description         String?
+  pricePerUnit        Decimal?             @db.Decimal(10, 2)
+  unit                String               @default("meter")
+  color               String?
+  material            String?
+  imageUrl            String?
+  isActive            Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  orderCustomizations OrderCustomization[]
+}
+
+model Consultation {
+  id                  String               @id @default(cuid())
+  userId              String
+  serviceId           String?
+  assignedDesignerId  String?
+  requestedDate       DateTime?
+  preferredTimeSlot   String?
+  scheduledAt         DateTime?
+  status              ConsultationStatus   @default(REQUESTED)
+  channel             ConsultationChannel  @default(PHONE)
+  customerNotes       String?
+  internalNotes       String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  customer            User                 @relation("CustomerConsultations", fields: [userId], references: [id])
+  service             Service?             @relation(fields: [serviceId], references: [id])
+  assignedDesigner    User?                @relation("AssignedDesignerConsultations", fields: [assignedDesignerId], references: [id])
+  designerNotes       DesignerNote[]       @relation("ConsultationDesignerNotes")
+  orders              Order[]              @relation("ConsultationOrders")
+
+  @@index([userId])
+  @@index([assignedDesignerId])
+  @@index([serviceId])
+}
+
+model DesignerNote {
+  id           String        @id @default(cuid())
+  consultationId String?
+  orderId      String?
+  authorUserId String
+  note         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  consultation Consultation? @relation("ConsultationDesignerNotes", fields: [consultationId], references: [id])
+  order        Order?        @relation("OrderDesignerNotes", fields: [orderId], references: [id])
+  author       User          @relation("DesignerNoteAuthor", fields: [authorUserId], references: [id])
+
+  @@index([consultationId])
+  @@index([orderId])
+  @@index([authorUserId])
+}
+
+model Order {
+  id                    String              @id @default(cuid())
+  orderNumber           String              @unique
+  userId                String
+  consultationId        String?
+  designerId            String?
+  qcManagerId           String?
+  couponId              String?
+  deliveryAddressId     String
+  billingAddressId      String?
+  pickupAddressId       String?
+  status                OrderStatus         @default(ORDER_PLACED)
+  paymentMode           PaymentMode         @default(BOOKING_AMOUNT)
+  fabricSourceType      FabricSourceType    @default(CUSTOMER_PROVIDED)
+  subtotalAmount        Decimal             @db.Decimal(10, 2)
+  discountAmount        Decimal             @default(0) @db.Decimal(10, 2)
+  taxAmount             Decimal             @default(0) @db.Decimal(10, 2)
+  shippingAmount        Decimal             @default(0) @db.Decimal(10, 2)
+  totalAmount           Decimal             @db.Decimal(10, 2)
+  amountPaid            Decimal             @default(0) @db.Decimal(10, 2)
+  currencyCode          String              @default("INR")
+  paymentStatus         PaymentStatus       @default(PENDING)
+  estimatedDeliveryDate DateTime?
+  deliveredAt           DateTime?
+  completedAt           DateTime?
+  customerNotes         String?
+  internalNotes         String?
+  qcNotes               String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  customer              User                @relation("CustomerOrders", fields: [userId], references: [id])
+  consultation          Consultation?       @relation("ConsultationOrders", fields: [consultationId], references: [id])
+  designer              User?               @relation("AssignedDesignerOrders", fields: [designerId], references: [id])
+  qcManager             User?               @relation("QualityCheckManagerOrders", fields: [qcManagerId], references: [id])
+  coupon                Coupon?             @relation(fields: [couponId], references: [id])
+  deliveryAddress       Address             @relation("DeliveryAddressOrders", fields: [deliveryAddressId], references: [id])
+  billingAddress        Address?            @relation("BillingAddressOrders", fields: [billingAddressId], references: [id])
+  pickupAddress         Address?            @relation("PickupAddressOrders", fields: [pickupAddressId], references: [id])
+  items                 OrderItem[]
+  statusHistory         OrderStatusHistory[]
+  designerNotes         DesignerNote[]      @relation("OrderDesignerNotes")
+  tailorAssignments     TailorAssignment[]
+  payments              Payment[]
+  fabricPickup          FabricPickup?
+  shipment              Shipment?
+  alterationRequests    AlterationRequest[]
+  reviews               Review[]
+  supportTickets        SupportTicket[]
+
+  @@index([userId])
+  @@index([consultationId])
+  @@index([designerId])
+  @@index([qcManagerId])
+  @@index([status])
+  @@index([paymentStatus])
+}
+
+model OrderItem {
+  id                  String               @id @default(cuid())
+  orderId             String
+  serviceId           String
+  serviceNameSnapshot String
+  unitPrice           Decimal              @db.Decimal(10, 2)
+  quantity            Int                  @default(1)
+  lineTotal           Decimal              @db.Decimal(10, 2)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  order               Order                @relation(fields: [orderId], references: [id])
+  service             Service              @relation(fields: [serviceId], references: [id])
+  customizations      OrderCustomization[]
+
+  @@index([orderId])
+  @@index([serviceId])
+}
+
+model OrderCustomization {
+  id                   String              @id @default(cuid())
+  orderItemId          String
+  serviceOptionId      String?
+  styleTemplateId      String?
+  measurementProfileId String?
+  fabricItemId         String?
+  customizationType    String
+  label                String
+  valueText            String?
+  valueJson            Json?
+  referenceImageUrl    String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  orderItem            OrderItem           @relation(fields: [orderItemId], references: [id])
+  serviceOption        ServiceOption?      @relation(fields: [serviceOptionId], references: [id])
+  styleTemplate        StyleTemplate?      @relation(fields: [styleTemplateId], references: [id])
+  measurementProfile   MeasurementProfile? @relation(fields: [measurementProfileId], references: [id])
+  fabricItem           FabricItem?         @relation(fields: [fabricItemId], references: [id])
+
+  @@index([orderItemId])
+}
+
+model OrderStatusHistory {
+  id              String      @id @default(cuid())
+  orderId         String
+  status          OrderStatus
+  comment         String?
+  changedByUserId String?
+  changedAt       DateTime    @default(now())
+  order           Order       @relation(fields: [orderId], references: [id])
+  changedBy       User?       @relation("OrderStatusChangedBy", fields: [changedByUserId], references: [id])
+
+  @@index([orderId, changedAt])
+}
+
+model TailorAssignment {
+  id               String    @id @default(cuid())
+  orderId          String
+  tailorUserId     String
+  assignedByUserId String
+  assignedAt       DateTime  @default(now())
+  unassignedAt     DateTime?
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  order            Order     @relation(fields: [orderId], references: [id])
+  tailor           User      @relation("TailorAssignments", fields: [tailorUserId], references: [id])
+  assignedBy       User      @relation("TailorAssignedBy", fields: [assignedByUserId], references: [id])
+
+  @@index([orderId])
+  @@index([tailorUserId])
+}
+
+model FabricPickup {
+  id              String            @id @default(cuid())
+  orderId         String            @unique
+  pickupAddressId String?
+  status          FabricPickupStatus @default(REQUESTED)
+  scheduledAt     DateTime?
+  courierName     String?
+  trackingNumber  String?
+  receivedAt      DateTime?
+  inspectionNotes String?
+  approvedAt      DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  order           Order             @relation(fields: [orderId], references: [id])
+  pickupAddress   Address?          @relation("FabricPickupAddress", fields: [pickupAddressId], references: [id])
+}
+
+model Payment {
+  id                String          @id @default(cuid())
+  orderId           String
+  userId            String
+  provider          PaymentProvider
+  providerOrderId   String?
+  providerPaymentId String?
+  amount            Decimal         @db.Decimal(10, 2)
+  currencyCode      String          @default("INR")
+  status            PaymentStatus   @default(PENDING)
+  methodHint        String?
+  paidAt            DateTime?
+  failureReason     String?
+  metadataJson      Json?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  order             Order           @relation(fields: [orderId], references: [id])
+  customer          User            @relation("CustomerPayments", fields: [userId], references: [id])
+  refunds           Refund[]
+
+  @@index([orderId])
+  @@index([providerPaymentId])
+}
+
+model Refund {
+  id               String       @id @default(cuid())
+  paymentId        String
+  amount           Decimal      @db.Decimal(10, 2)
+  reason           String
+  status           RefundStatus @default(REQUESTED)
+  providerRefundId String?
+  processedAt      DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  payment          Payment      @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+}
+
+model Shipment {
+  id                        String         @id @default(cuid())
+  orderId                   String         @unique
+  status                    ShipmentStatus @default(PENDING)
+  carrierName               String?
+  trackingNumber            String?
+  shippedAt                 DateTime?
+  deliveredAt               DateTime?
+  shippingAddressSnapshotJson Json?
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+  order                     Order          @relation(fields: [orderId], references: [id])
+}
+
+model AlterationRequest {
+  id              String           @id @default(cuid())
+  orderId         String
+  requestedByUserId String
+  reason          String
+  details         String?
+  status          AlterationStatus @default(REQUESTED)
+  requestedAt     DateTime         @default(now())
+  resolvedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  order           Order            @relation(fields: [orderId], references: [id])
+  requestedBy     User             @relation("AlterationRequestedBy", fields: [requestedByUserId], references: [id])
+
+  @@index([orderId])
+  @@index([requestedByUserId])
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  orderId     String
+  serviceId   String?
+  userId      String
+  rating      Int
+  title       String?
+  comment     String?
+  isPublished Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  order       Order     @relation(fields: [orderId], references: [id])
+  service     Service?  @relation("ServiceReviews", fields: [serviceId], references: [id])
+  customer    User      @relation("CustomerReviews", fields: [userId], references: [id])
+
+  @@unique([orderId, userId])
+}
+
+model Coupon {
+  id                  String              @id @default(cuid())
+  code                String              @unique
+  description         String?
+  discountType        CouponDiscountType
+  discountValue       Decimal             @db.Decimal(10, 2)
+  minimumOrderAmount  Decimal?            @db.Decimal(10, 2)
+  maximumDiscountAmount Decimal?          @db.Decimal(10, 2)
+  startsAt            DateTime
+  endsAt              DateTime
+  usageLimit          Int?
+  perUserLimit        Int?
+  isActive            Boolean             @default(true)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  orders              Order[]
+}
+
+model SupportTicket {
+  id               String               @id @default(cuid())
+  userId           String
+  orderId          String?
+  subject          String
+  message          String
+  category         String?
+  status           SupportTicketStatus  @default(OPEN)
+  priority         SupportTicketPriority @default(MEDIUM)
+  assignedToUserId String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  customer         User                 @relation("CustomerSupportTickets", fields: [userId], references: [id])
+  order            Order?               @relation(fields: [orderId], references: [id])
+  assignee         User?                @relation("AssignedSupportTickets", fields: [assignedToUserId], references: [id])
+
+  @@index([userId])
+  @@index([assignedToUserId])
+}
+
+model Notification {
+  id                String             @id @default(cuid())
+  userId            String?
+  channel           NotificationChannel
+  eventKey          String
+  recipient         String
+  subject           String?
+  message           String
+  status            NotificationStatus @default(PENDING)
+  providerMessageId String?
+  payload           Json?
+  sentAt            DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  user              User?              @relation("UserNotifications", fields: [userId], references: [id])
+
+  @@index([eventKey])
+  @@index([status])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorUserId String
+  action     String
+  entityType String
+  entityId   String
+  beforeJson Json?
+  afterJson  Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  actor      User     @relation("ActorAuditLogs", fields: [actorUserId], references: [id])
+
+  @@index([actorUserId])
+  @@index([entityType, entityId])
+}
+
+model BlogPost {
+  id             String     @id @default(cuid())
+  authorUserId   String?
+  title          String
+  slug           String     @unique
+  excerpt        String?
+  content        String
+  coverImageUrl  String?
+  status         BlogStatus @default(DRAFT)
+  publishedAt    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  author         User?      @relation("BlogAuthor", fields: [authorUserId], references: [id])
+}
+
+model Banner {
+  id         String       @id @default(cuid())
+  title      String
+  subtitle   String?
+  imageUrl   String
+  ctaLabel   String?
+  ctaUrl     String?
+  status     BannerStatus @default(DRAFT)
+  placement  String
+  sortOrder  Int          @default(0)
+  startsAt   DateTime?
+  endsAt     DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
