@@ -5,7 +5,8 @@ export type NotificationEventKey =
   | "consultation.booked"
   | "order.status_changed"
   | "designer.assigned"
-  | "fabric.pickup_scheduled";
+  | "fabric.pickup_scheduled"
+  | "alteration.requested";
 
 export type NotificationDispatchInput = {
   userId?: string;

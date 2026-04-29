@@ -23,3 +23,8 @@
 - Added shared backend utilities for API responses, error handling, sessions, JWT auth, RBAC, payments, notifications, and logging.
 - Implemented Phase 5 core REST routes for auth, catalog, customer profile, measurements, consultations, orders, payment actions, webhook placeholder handling, and admin dashboard metrics.
 - Verified the expanded backend surface with linting, type-checking, and production build checks.
+
+### Milestone 6: Customer frontend experience
+- Replaced the placeholder landing experience with a premium customer-facing storefront, service catalog, service detail pages, style gallery, auth screens, dashboard, measurement center, tracking pages, and support content.
+- Added live consultation, measurement, and alteration request forms wired to the backend APIs, plus resilient fallback catalog content for database-unavailable local environments.
+- Verified the customer app with linting, type-checking, and a production build.

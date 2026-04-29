@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SiteShell } from "@/components/site/site-shell";
 import { siteConfig } from "@/lib/config/site";
 import "./globals.css";
 
@@ -18,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SiteShell>{children}</SiteShell>
+      </body>
     </html>
   );
 }
