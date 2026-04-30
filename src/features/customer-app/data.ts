@@ -4,6 +4,8 @@ import { consultationService } from "@/features/consultations/service";
 import { customerProfileService } from "@/features/customer/profile-service";
 import { measurementService } from "@/features/measurements/service";
 import { orderService } from "@/features/orders/service";
+import { reviewService } from "@/features/reviews/service";
+import { supportTicketService } from "@/features/support/service";
 import { getServerSessionUser } from "@/lib/auth/server-session";
 import { fallbackServices, serviceNarratives } from "@/features/customer-app/content";
 import { toNumber } from "@/features/customer-app/format";
@@ -68,6 +70,16 @@ export type DashboardSnapshot = {
   profile?: Awaited<ReturnType<typeof customerProfileService.getProfile>>;
   orders: Awaited<ReturnType<typeof orderService.list>>;
   consultations: Awaited<ReturnType<typeof consultationService.list>>;
+  measurements: Awaited<ReturnType<typeof measurementService.list>>;
+  supportTickets: Awaited<ReturnType<typeof supportTicketService.listForCustomer>>;
+  reviews: Awaited<ReturnType<typeof reviewService.listForCustomer>>;
+  degraded?: boolean;
+};
+
+export type CheckoutPrepSnapshot = {
+  authenticated: boolean;
+  userName?: string;
+  addresses: Awaited<ReturnType<typeof customerProfileService.listAddresses>>;
   measurements: Awaited<ReturnType<typeof measurementService.list>>;
   degraded?: boolean;
 };
@@ -285,6 +297,52 @@ export async function getFeaturedServices() {
   return overview.services.filter((service) => service.isFeatured).slice(0, 4);
 }
 
+export async function getPlannerServices() {
+  const overview = await getCatalogOverview();
+  const services = await Promise.all(
+    overview.services.map(async (service) => getServiceDetailData(service.slug)),
+  );
+
+  return {
+    services: services.filter((service): service is ServiceDetailView => Boolean(service)),
+    degraded: overview.degraded,
+  };
+}
+
+export async function getCheckoutPrepSnapshot(): Promise<CheckoutPrepSnapshot> {
+  const sessionUser = await getServerSessionUser();
+
+  if (!sessionUser) {
+    return {
+      authenticated: false,
+      addresses: [],
+      measurements: [],
+    };
+  }
+
+  try {
+    const [addresses, measurements] = await Promise.all([
+      customerProfileService.listAddresses(sessionUser.sub),
+      measurementService.list(sessionUser.sub),
+    ]);
+
+    return {
+      authenticated: true,
+      userName: sessionUser.firstName,
+      addresses,
+      measurements,
+    };
+  } catch {
+    return {
+      authenticated: true,
+      userName: sessionUser.firstName,
+      addresses: [],
+      measurements: [],
+      degraded: true,
+    };
+  }
+}
+
 export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
   const sessionUser = await getServerSessionUser();
 
@@ -294,15 +352,19 @@ export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
       orders: [],
       consultations: [],
       measurements: [],
+      supportTickets: [],
+      reviews: [],
     };
   }
 
   try {
-    const [profile, orders, consultations, measurements] = await Promise.all([
+    const [profile, orders, consultations, measurements, supportTickets, reviews] = await Promise.all([
       customerProfileService.getProfile(sessionUser.sub),
       orderService.list(sessionUser.sub),
       consultationService.list(sessionUser.sub),
       measurementService.list(sessionUser.sub),
+      supportTicketService.listForCustomer(sessionUser.sub),
+      reviewService.listForCustomer(sessionUser.sub),
     ]);
 
     return {
@@ -312,6 +374,8 @@ export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
       orders,
       consultations,
       measurements,
+      supportTickets,
+      reviews,
     };
   } catch {
     return {
@@ -320,6 +384,70 @@ export async function getDashboardSnapshot(): Promise<DashboardSnapshot> {
       orders: [],
       consultations: [],
       measurements: [],
+      supportTickets: [],
+      reviews: [],
+      degraded: true,
+    };
+  }
+}
+
+export async function getSupportCenterSnapshot() {
+  const sessionUser = await getServerSessionUser();
+  if (!sessionUser) {
+    return {
+      authenticated: false,
+      orders: [],
+      tickets: [],
+    };
+  }
+
+  try {
+    const [orders, tickets] = await Promise.all([
+      orderService.list(sessionUser.sub),
+      supportTicketService.listForCustomer(sessionUser.sub),
+    ]);
+
+    return {
+      authenticated: true,
+      orders,
+      tickets,
+    };
+  } catch {
+    return {
+      authenticated: true,
+      orders: [],
+      tickets: [],
+      degraded: true,
+    };
+  }
+}
+
+export async function getReviewCenterSnapshot() {
+  const sessionUser = await getServerSessionUser();
+  if (!sessionUser) {
+    return {
+      authenticated: false,
+      reviewableOrders: [],
+      reviews: [],
+    };
+  }
+
+  try {
+    const [reviewableOrders, reviews] = await Promise.all([
+      reviewService.listReviewableOrders(sessionUser.sub),
+      reviewService.listForCustomer(sessionUser.sub),
+    ]);
+
+    return {
+      authenticated: true,
+      reviewableOrders,
+      reviews,
+    };
+  } catch {
+    return {
+      authenticated: true,
+      reviewableOrders: [],
+      reviews: [],
       degraded: true,
     };
   }

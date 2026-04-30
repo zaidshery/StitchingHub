@@ -75,6 +75,14 @@ export default async function DashboardPage() {
             <p className="text-sm text-muted">Measurement profiles</p>
             <p className="mt-2 font-display text-4xl">{snapshot.measurements.length}</p>
           </div>
+          <div className="rounded-[1.8rem] border bg-white/80 p-5 shadow-[0_18px_45px_rgba(58,35,25,0.06)]">
+            <p className="text-sm text-muted">Support requests</p>
+            <p className="mt-2 font-display text-4xl">{snapshot.supportTickets.length}</p>
+          </div>
+          <div className="rounded-[1.8rem] border bg-white/80 p-5 shadow-[0_18px_45px_rgba(58,35,25,0.06)]">
+            <p className="text-sm text-muted">Reviews</p>
+            <p className="mt-2 font-display text-4xl">{snapshot.reviews.length}</p>
+          </div>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -150,6 +158,15 @@ export default async function DashboardPage() {
                 className="mt-4 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#2a211d]"
               >
                 Manage measurements
+              </Link>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Link href="/support" className="rounded-[1.5rem] border bg-[#fffaf6] p-5 text-sm font-semibold text-foreground hover:bg-white">
+                Open support request
+              </Link>
+              <Link href="/reviews" className="rounded-[1.5rem] border bg-[#fffaf6] p-5 text-sm font-semibold text-foreground hover:bg-white">
+                Review delivered orders
               </Link>
             </div>
           </div>

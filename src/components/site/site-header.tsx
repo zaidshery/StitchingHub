@@ -7,6 +7,7 @@ const navigation = [
   { href: "/consultation", label: "Consultation" },
   { href: "/measurements", label: "Measurements" },
   { href: "/track-order", label: "Track order" },
+  { href: "/support", label: "Support" },
 ];
 type SiteHeaderProps = {
   user?: {
@@ -15,6 +16,8 @@ type SiteHeaderProps = {
   } | null;
 };
 export function SiteHeader({ user }: SiteHeaderProps) {
+  const dashboardHref = user?.roleName === "CUSTOMER" ? "/dashboard" : "/admin/dashboard";
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/50 bg-[#faf3eb]/85 backdrop-blur-xl">
       <Container className="flex flex-col gap-4 py-4 lg:flex-row lg:items-center lg:justify-between">
@@ -57,7 +60,7 @@ export function SiteHeader({ user }: SiteHeaderProps) {
                 Signed in as <span className="font-semibold text-foreground">{user.firstName}</span>
               </div>
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 className="inline-flex rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(157,79,58,0.22)]"
               >
                 Dashboard

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { fallbackServices, tailoringSteps } from "@/features/customer-app/content";
+import { tailoringSteps } from "@/features/customer-app/content";
+import { getCheckoutPrepSnapshot, getPlannerServices } from "@/features/customer-app/data";
 import { CustomOrderPlanner } from "@/features/customer-app/orders/custom-order-planner";
 
 export const dynamic = "force-dynamic";
@@ -11,8 +12,13 @@ export const metadata: Metadata = {
   description: "Plan a custom tailoring order with service selection, add-ons, measurement path, and fabric flow guidance.",
 };
 
-export default function CustomOrderPage() {
-  const plannerServices = fallbackServices.map((service) => ({
+export default async function CustomOrderPage() {
+  const [plannerData, checkoutPrep] = await Promise.all([
+    getPlannerServices(),
+    getCheckoutPrepSnapshot(),
+  ]);
+
+  const plannerServices = plannerData.services.map((service) => ({
     id: service.id,
     name: service.name,
     slug: service.slug,
@@ -42,7 +48,13 @@ export default function CustomOrderPage() {
           description="This planner helps customers compare service directions, optional upgrades, fabric flow, and measurement readiness before booking or consultation."
         />
 
-        <CustomOrderPlanner services={plannerServices} />
+        <CustomOrderPlanner
+          services={plannerServices}
+          authenticated={checkoutPrep.authenticated}
+          addresses={checkoutPrep.addresses}
+          measurements={checkoutPrep.measurements}
+          degraded={checkoutPrep.degraded || plannerData.degraded}
+        />
 
         <section className="grid gap-5 lg:grid-cols-3">
           {tailoringSteps.map((step, index) => (

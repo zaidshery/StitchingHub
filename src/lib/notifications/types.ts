@@ -6,7 +6,8 @@ export type NotificationEventKey =
   | "order.status_changed"
   | "designer.assigned"
   | "fabric.pickup_scheduled"
-  | "alteration.requested";
+  | "alteration.requested"
+  | "support.ticket.created";
 
 export type NotificationDispatchInput = {
   userId?: string;

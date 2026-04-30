@@ -24,9 +24,14 @@ const profileSelect = {
     select: {
       id: true,
       label: true,
+      recipientName: true,
+      phone: true,
+      line1: true,
+      line2: true,
       city: true,
       state: true,
       postalCode: true,
+      country: true,
       isDefault: true,
     },
     orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
@@ -82,5 +87,60 @@ export const customerProfileService = {
     });
 
     return user;
+  },
+
+  async listAddresses(userId: string) {
+    return prisma.address.findMany({
+      where: { userId },
+      select: profileSelect.addresses.select,
+      orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
+    });
+  },
+
+  async createAddress(
+    userId: string,
+    input: {
+      label: string;
+      recipientName: string;
+      phone: string;
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      postalCode: string;
+      country: string;
+      isDefault: boolean;
+    },
+  ) {
+    const existingAddressCount = await prisma.address.count({ where: { userId } });
+    const shouldSetDefault = input.isDefault || existingAddressCount === 0;
+
+    const address = await prisma.$transaction(async (tx) => {
+      if (shouldSetDefault) {
+        await tx.address.updateMany({
+          where: { userId },
+          data: { isDefault: false },
+        });
+      }
+
+      return tx.address.create({
+        data: {
+          userId,
+          label: input.label,
+          recipientName: input.recipientName,
+          phone: input.phone,
+          line1: input.line1,
+          line2: input.line2,
+          city: input.city,
+          state: input.state,
+          postalCode: input.postalCode,
+          country: input.country,
+          isDefault: shouldSetDefault,
+        },
+        select: profileSelect.addresses.select,
+      });
+    });
+
+    return address;
   },
 };

@@ -14,6 +14,24 @@ Use Docker Compose for local development with:
 
 Local development must also support running the app natively outside Docker for faster iteration when desired.
 
+Current local Docker commands:
+
+```bash
+docker compose up --build
+docker compose run --rm web npx prisma migrate deploy
+docker compose run --rm web npm run db:seed
+```
+
+For native local development, keep PostgreSQL available at the `DATABASE_URL` in `.env`, then run:
+
+```bash
+npm install
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+npm run dev
+```
+
 ## 3. Production Topology
 Recommended baseline production stack:
 - Next.js app container behind reverse proxy/load balancer
@@ -64,6 +82,12 @@ Configuration categories:
 - If app deployment fails after a non-destructive migration, roll back image immediately.
 - If a destructive migration is ever required, use expand-migrate-contract strategy to avoid hard rollback dependency.
 - Document manual rollback steps for payment- or order-related releases.
+
+Rollback runbook:
+- Pause new deployments and confirm whether the issue is app-only or migration-related.
+- If app-only, redeploy the previous image and verify `/api/health`, login, customer order creation, and admin status update.
+- If migration-related, restore from the latest verified database backup or run a prepared forward-fix migration.
+- Record the incident, affected order/payment IDs, and follow-up owner before reopening deployment.
 
 ## 8. Storage and Media Plan
 - Store uploaded reference images in object storage with environment-specific buckets/prefixes.
