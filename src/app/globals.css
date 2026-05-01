@@ -35,10 +35,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(circle at top left, rgba(157, 79, 58, 0.13), transparent 35%),
-    radial-gradient(circle at 80% 10%, rgba(234, 215, 206, 0.65), transparent 30%),
-    linear-gradient(180deg, #f9f3ec 0%, #f5efe7 52%, #f8f1e9 100%);
+  background: linear-gradient(180deg, #f9f3ec 0%, #f5efe7 52%, #f8f1e9 100%);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
 }
@@ -55,10 +52,68 @@ textarea {
     transform 160ms ease;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+input,
+select,
+textarea {
+  min-width: 0;
+}
+
+button:disabled,
+select:disabled,
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+
 ::selection {
   background: rgba(157, 79, 58, 0.2);
 }
 
 .font-display {
   font-family: var(--font-display), serif;
+}
+
+@keyframes journey-thread {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  10%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    top: calc(100% - 3.5rem);
+    opacity: 0;
+  }
+}
+
+@keyframes journey-card {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  45%,
+  60% {
+    transform: translateY(-0.35rem);
+  }
+}
+
+@keyframes journey-float {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -0.5rem);
+  }
 }
