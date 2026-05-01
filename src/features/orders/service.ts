@@ -96,7 +96,7 @@ const orderDetailSelect = {
 } satisfies Prisma.OrderSelect;
 
 function generateOrderNumber() {
-  return `TCS-${Date.now().toString().slice(-6)}${randomInt(10, 99)}`;
+  return `SH-${Date.now().toString().slice(-6)}${randomInt(10, 99)}`;
 }
 
 function toAmount(value: Prisma.Decimal | number | string | null | undefined) {

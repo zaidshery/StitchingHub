@@ -3,7 +3,7 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: tailorcraft_studio
+      POSTGRES_DB: stitchinghub
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d tailorcraft_studio"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d stitchinghub"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -24,9 +24,9 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_APP_NAME: TailorCraft Studio
+      NEXT_PUBLIC_APP_NAME: StitchingHub
       NEXT_PUBLIC_APP_URL: http://localhost:3000
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/tailorcraft_studio?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/stitchinghub?schema=public
       JWT_ACCESS_SECRET: replace-with-a-long-random-secret-for-local-dev
       JWT_REFRESH_SECRET: replace-with-a-different-long-random-secret-local
       PAYMENT_PROVIDER: razorpay

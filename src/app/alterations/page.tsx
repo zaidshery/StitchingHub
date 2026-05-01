@@ -32,7 +32,7 @@ export default async function AlterationsPage() {
             description="Use the aftercare flow to report fit corrections, finishing issues, or event-driven refinements after delivery."
           />
 
-          <div className="space-y-4 rounded-[2rem] border bg-white/80 p-6 shadow-[0_18px_45px_rgba(58,35,25,0.06)]">
+          <div className="space-y-4 rounded-lg border bg-white/80 p-5 shadow-[0_18px_45px_rgba(58,35,25,0.06)] sm:p-6">
             <h2 className="font-display text-3xl">Eligible delivered orders</h2>
             {deliveredOrders.length ? (
               deliveredOrders.map((order) => (
@@ -70,7 +70,7 @@ export default async function AlterationsPage() {
           authenticated={snapshot.authenticated}
           orderOptions={deliveredOrders.map((order) => ({
             orderNumber: order.orderNumber,
-            label: `${order.orderNumber} Â· ${order.items.map((item) => item.serviceNameSnapshot).join(", ")}`,
+            label: `${order.orderNumber} · ${order.items.map((item) => item.serviceNameSnapshot).join(", ")}`,
           }))}
         />
       </Container>

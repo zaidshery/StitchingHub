@@ -158,10 +158,10 @@ export function CustomOrderPlanner({
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-      <div className="space-y-5 rounded-[2rem] border bg-white/85 p-6 shadow-[0_24px_70px_rgba(55,34,23,0.08)] sm:p-8">
+      <div className="space-y-5 rounded-lg border bg-white/85 p-5 shadow-[0_18px_45px_rgba(55,34,23,0.08)] sm:p-6">
         <label className="space-y-2 text-sm text-muted">
           <span>Garment service</span>
-          <select value={serviceId} onChange={(event) => { setServiceId(event.target.value); setSelectedOptions([]); }} className="w-full rounded-2xl border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
+          <select value={serviceId} onChange={(event) => { setServiceId(event.target.value); setSelectedOptions([]); }} className="w-full rounded-lg border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
             {services.map((service) => (
               <option key={service.id} value={service.id}>
                 {service.name}
@@ -170,7 +170,7 @@ export function CustomOrderPlanner({
           </select>
         </label>
 
-        <div className="rounded-[1.75rem] border bg-[#fffaf6] p-5">
+        <div className="rounded-lg border bg-[#fffaf6] p-5">
           <h3 className="font-display text-2xl">{selectedService.name}</h3>
           <p className="mt-2 text-sm leading-7 text-muted">{selectedService.shortDescription}</p>
         </div>
@@ -179,7 +179,7 @@ export function CustomOrderPlanner({
           <p className="text-sm uppercase tracking-[0.24em] text-muted">Optional add-ons</p>
           <div className="grid gap-3">
             {selectedService.options.map((option) => (
-              <label key={option.id} className="flex items-start justify-between gap-4 rounded-2xl border bg-[#fffaf6] px-4 py-4 text-sm text-muted">
+              <label key={option.id} className="flex items-start justify-between gap-4 rounded-lg border bg-[#fffaf6] px-4 py-4 text-sm text-muted">
                 <div className="space-y-1">
                   <p className="font-semibold text-foreground">{option.name}</p>
                   <p>{option.optionType.replaceAll("_", " ")}</p>
@@ -196,14 +196,14 @@ export function CustomOrderPlanner({
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="space-y-2 text-sm text-muted">
             <span>Fabric flow</span>
-            <select name="fabricSourceType" className="w-full rounded-2xl border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
+            <select name="fabricSourceType" className="w-full rounded-lg border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
               <option value="CUSTOMER_PROVIDED">I have fabric</option>
               <option value="PLATFORM_ASSISTED">I need fabric</option>
             </select>
           </label>
           <label className="space-y-2 text-sm text-muted">
             <span>Measurement path</span>
-            <select name="measurementProfileId" className="w-full rounded-2xl border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
+            <select name="measurementProfileId" className="w-full rounded-lg border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
               <option value="">Add measurements later</option>
               {measurements.map((profile) => (
                 <option key={profile.id} value={profile.id}>
@@ -217,7 +217,7 @@ export function CustomOrderPlanner({
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="space-y-2 text-sm text-muted">
             <span>Style reference</span>
-            <select name="styleTemplateId" className="w-full rounded-2xl border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
+            <select name="styleTemplateId" className="w-full rounded-lg border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
               <option value="">No style selected</option>
               {selectedService.styleTemplates.map((style) => (
                 <option key={style.id} value={style.id}>
@@ -228,7 +228,7 @@ export function CustomOrderPlanner({
           </label>
           <label className="space-y-2 text-sm text-muted">
             <span>Payment mode</span>
-            <select name="paymentMode" className="w-full rounded-2xl border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
+            <select name="paymentMode" className="w-full rounded-lg border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent">
               <option value="BOOKING_AMOUNT">Pay booking amount</option>
               <option value="FULL_AMOUNT">Pay full amount</option>
             </select>
@@ -237,18 +237,18 @@ export function CustomOrderPlanner({
 
         <label className="space-y-2 text-sm text-muted">
           <span>Design notes</span>
-          <textarea name="customNotes" rows={4} placeholder="Mention neckline, sleeve, fit, occasion, fabric notes, or urgency." className="w-full rounded-2xl border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent" />
+          <textarea name="customNotes" rows={4} placeholder="Mention neckline, sleeve, fit, occasion, fabric notes, or urgency." className="w-full rounded-lg border bg-[#fffaf6] px-4 py-3 text-foreground outline-none focus:border-accent" />
         </label>
 
-        <div className="space-y-4 rounded-[1.75rem] border bg-[#fffaf6] p-5">
+        <div className="space-y-4 rounded-lg border bg-[#fffaf6] p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm uppercase tracking-[0.24em] text-muted">Delivery address</p>
             {addresses.length ? (
-              <div className="flex rounded-full border bg-white p-1 text-xs font-semibold">
-                <button type="button" onClick={() => setAddressMode("existing")} className={`rounded-full px-3 py-1.5 ${addressMode === "existing" ? "bg-accent text-white" : "text-muted"}`}>
+              <div className="flex rounded-lg border bg-white p-1 text-xs font-semibold">
+                <button type="button" onClick={() => setAddressMode("existing")} className={`rounded-md px-3 py-1.5 ${addressMode === "existing" ? "bg-accent text-white" : "text-muted"}`}>
                   Saved
                 </button>
-                <button type="button" onClick={() => setAddressMode("new")} className={`rounded-full px-3 py-1.5 ${addressMode === "new" ? "bg-accent text-white" : "text-muted"}`}>
+                <button type="button" onClick={() => setAddressMode("new")} className={`rounded-md px-3 py-1.5 ${addressMode === "new" ? "bg-accent text-white" : "text-muted"}`}>
                   New
                 </button>
               </div>
@@ -256,7 +256,7 @@ export function CustomOrderPlanner({
           </div>
 
           {addressMode === "existing" && addresses.length ? (
-            <select name="addressId" className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent">
+            <select name="addressId" className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent">
               {addresses.map((address) => (
                 <option key={address.id} value={address.id}>
                   {address.label} - {address.line1}, {address.city} {address.postalCode}
@@ -267,41 +267,41 @@ export function CustomOrderPlanner({
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="space-y-2 text-sm text-muted">
                 <span>Label</span>
-                <input name="label" placeholder="Home" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="label" placeholder="Home" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted">
                 <span>Recipient</span>
-                <input name="recipientName" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="recipientName" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted">
                 <span>Phone</span>
-                <input name="phone" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="phone" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted">
                 <span>Postal code</span>
-                <input name="postalCode" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="postalCode" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted sm:col-span-2">
                 <span>Address line 1</span>
-                <input name="line1" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="line1" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted sm:col-span-2">
                 <span>Address line 2</span>
-                <input name="line2" className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="line2" className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted">
                 <span>City</span>
-                <input name="city" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="city" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted">
                 <span>State</span>
-                <input name="state" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="state" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
               <label className="space-y-2 text-sm text-muted">
                 <span>Country</span>
-                <input name="country" defaultValue="India" required={addressMode === "new"} className="w-full rounded-2xl border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
+                <input name="country" defaultValue="India" required={addressMode === "new"} className="w-full rounded-lg border bg-white px-4 py-3 text-foreground outline-none focus:border-accent" />
               </label>
-              <label className="flex items-center gap-3 self-end rounded-2xl border bg-white px-4 py-3 text-sm text-muted">
+              <label className="flex items-center gap-3 self-end rounded-lg border bg-white px-4 py-3 text-sm text-muted">
                 <input name="isDefault" type="checkbox" className="h-4 w-4 rounded border-[#d7c3b8] text-accent focus:ring-accent" />
                 Save as default
               </label>
@@ -310,7 +310,7 @@ export function CustomOrderPlanner({
         </div>
       </div>
 
-      <div className="space-y-5 rounded-[2rem] border bg-[#2d221d] p-6 text-white shadow-[0_24px_70px_rgba(55,34,23,0.16)] sm:p-8">
+      <div className="space-y-5 rounded-lg border bg-[#2d221d] p-5 text-white shadow-[0_18px_45px_rgba(55,34,23,0.16)] sm:p-6">
         <div>
           <p className="text-sm uppercase tracking-[0.24em] text-white/60">Estimate summary</p>
           <h3 className="mt-3 font-display text-4xl leading-tight">{formatCurrency(estimate, selectedService.currencyCode)}</h3>
@@ -319,7 +319,7 @@ export function CustomOrderPlanner({
           </p>
         </div>
 
-        <div className="rounded-[1.75rem] border border-white/15 bg-white/8 p-5">
+        <div className="rounded-lg border border-white/15 bg-white/8 p-5">
           <p className="text-sm uppercase tracking-[0.22em] text-white/60">Style direction</p>
           <div className="mt-4 space-y-3 text-sm leading-7 text-white/80">
             {selectedService.styleTemplates.map((style) => (
@@ -332,33 +332,33 @@ export function CustomOrderPlanner({
         </div>
 
         {!authenticated ? (
-          <div className="rounded-[1.5rem] border border-white/15 bg-white/8 px-4 py-3 text-sm leading-6 text-white/75">
+          <div className="rounded-lg border border-white/15 bg-white/8 px-4 py-3 text-sm leading-6 text-white/75">
             Sign in to place a custom order. You can still use the planner for estimates.
           </div>
         ) : null}
         {degraded ? (
-          <div className="rounded-[1.5rem] border border-amber-200/30 bg-amber-200/10 px-4 py-3 text-sm leading-6 text-amber-50">
+          <div className="rounded-lg border border-amber-200/30 bg-amber-200/10 px-4 py-3 text-sm leading-6 text-amber-50">
             Live checkout data is unavailable in this session. Estimate mode remains available.
           </div>
         ) : null}
-        {success ? <div className="rounded-[1.5rem] border border-emerald-200/30 bg-emerald-200/10 px-4 py-3 text-sm text-emerald-50">{success}</div> : null}
-        {error ? <div className="rounded-[1.5rem] border border-rose-200/30 bg-rose-200/10 px-4 py-3 text-sm text-rose-50">{error}</div> : null}
+        {success ? <div className="rounded-lg border border-emerald-200/30 bg-emerald-200/10 px-4 py-3 text-sm text-emerald-50">{success}</div> : null}
+        {error ? <div className="rounded-lg border border-rose-200/30 bg-rose-200/10 px-4 py-3 text-sm text-rose-50">{error}</div> : null}
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <button type="submit" disabled={!authenticated || loading || Boolean(degraded)} className="inline-flex flex-1 items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#2d221d] disabled:cursor-not-allowed disabled:opacity-60">
+          <button type="submit" disabled={!authenticated || loading || Boolean(degraded)} className="inline-flex flex-1 items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#2d221d] disabled:cursor-not-allowed disabled:opacity-60">
             {loading ? "Creating..." : "Create order"}
           </button>
-          <Link href={authenticated ? "/consultation" : "/signup"} className="inline-flex flex-1 items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white">
+          <Link href={authenticated ? "/consultation" : "/signup"} className="inline-flex flex-1 items-center justify-center rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-white">
             {authenticated ? "Book consultation" : "Create account"}
           </Link>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Link href="/measurements" className="inline-flex flex-1 items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white">
+          <Link href="/measurements" className="inline-flex flex-1 items-center justify-center rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-white">
             Measurements
           </Link>
-          <Link href="/consultation" className="inline-flex flex-1 items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white">
-            Book consultation
+          <Link href="/support" className="inline-flex flex-1 items-center justify-center rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-white">
+            Support
           </Link>
         </div>
       </div>

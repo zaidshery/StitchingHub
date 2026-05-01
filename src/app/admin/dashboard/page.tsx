@@ -108,26 +108,26 @@ export default async function AdminDashboardPage() {
           </Link>
         </section>
 
-        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="border bg-white/85 p-4">
+        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="rounded-lg border bg-white/85 p-4">
             <p className="text-sm text-muted">Orders</p>
             <p className="mt-2 font-display text-4xl">{snapshot.metrics.orders.total}</p>
           </div>
-          <div className="border bg-white/85 p-4">
+          <div className="rounded-lg border bg-white/85 p-4">
             <p className="text-sm text-muted">Consultations</p>
             <p className="mt-2 font-display text-4xl">{snapshot.metrics.consultations.total}</p>
           </div>
-          <div className="border bg-white/85 p-4">
+          <div className="rounded-lg border bg-white/85 p-4">
             <p className="text-sm text-muted">Customers</p>
             <p className="mt-2 font-display text-4xl">{snapshot.metrics.customers.total}</p>
           </div>
-          <div className="border bg-white/85 p-4">
+          <div className="rounded-lg border bg-white/85 p-4">
             <p className="text-sm text-muted">Collected revenue</p>
             <p className="mt-2 font-display text-4xl">
               {formatCurrency(snapshot.metrics.revenue.collectedAmount)}
             </p>
           </div>
-          <div className="border bg-white/85 p-4">
+          <div className="rounded-lg border bg-white/85 p-4">
             <p className="text-sm text-muted">Support queue</p>
             <p className="mt-2 font-display text-4xl">{snapshot.supportTickets.length}</p>
           </div>

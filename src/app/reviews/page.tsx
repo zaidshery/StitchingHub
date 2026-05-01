@@ -34,7 +34,7 @@ export default async function ReviewsPage() {
         <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <ReviewForm authenticated={snapshot.authenticated} reviewableOrders={snapshot.reviewableOrders} />
 
-          <div className="space-y-4 rounded-[2rem] border bg-white/85 p-6 shadow-[0_24px_70px_rgba(55,34,23,0.08)] sm:p-8">
+          <div className="space-y-4 rounded-lg border bg-white/85 p-5 shadow-[0_18px_45px_rgba(55,34,23,0.08)] sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-3xl">Your reviews</h2>
               {!snapshot.authenticated ? (
@@ -45,7 +45,7 @@ export default async function ReviewsPage() {
             </div>
             {snapshot.reviews.length ? (
               snapshot.reviews.map((review) => (
-                <div key={review.id} className="rounded-[1.5rem] border bg-[#fffaf6] p-5">
+                <div key={review.id} className="rounded-lg border bg-[#fffaf6] p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <p className="font-semibold">{review.service?.name ?? review.order.orderNumber}</p>
                     <span className="text-sm font-semibold text-accent">{review.rating}/5</span>
@@ -56,7 +56,7 @@ export default async function ReviewsPage() {
                 </div>
               ))
             ) : (
-              <div className="rounded-[1.5rem] border border-dashed bg-[#fffaf6] p-5 text-sm leading-7 text-muted">
+              <div className="rounded-lg border border-dashed bg-[#fffaf6] p-5 text-sm leading-7 text-muted">
                 No reviews submitted yet.
               </div>
             )}

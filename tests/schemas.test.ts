@@ -40,7 +40,7 @@ describe("customer input schemas", () => {
       category: "delivery",
     });
     const review = createReviewSchema.parse({
-      orderNumber: "TCS-1002",
+      orderNumber: "SH-1002",
       rating: "5",
       title: "Lovely fit",
     });

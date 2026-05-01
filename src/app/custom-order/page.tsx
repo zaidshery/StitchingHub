@@ -58,8 +58,8 @@ export default async function CustomOrderPage() {
 
         <section className="grid gap-5 lg:grid-cols-3">
           {tailoringSteps.map((step, index) => (
-            <div key={step.title} className="rounded-[1.8rem] border bg-white/75 p-6 shadow-[0_18px_45px_rgba(58,35,25,0.06)]">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft font-semibold text-accent">
+            <div key={step.title} className="rounded-lg border bg-white/75 p-5 shadow-[0_18px_45px_rgba(58,35,25,0.06)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft font-semibold text-accent">
                 {index + 1}
               </div>
               <h2 className="mt-4 font-display text-3xl leading-tight">{step.title}</h2>

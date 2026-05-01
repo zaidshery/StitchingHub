@@ -1,6 +1,6 @@
-# TailorCraft Studio
+# StitchingHub
 
-TailorCraft Studio is a custom tailoring and service-commerce platform being built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and Prisma.
+StitchingHub is a custom tailoring and service-commerce platform being built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and Prisma.
 
 ## Current Status
 
@@ -53,4 +53,4 @@ docker compose up --build
 - `SECURITY_PLAN.md`
 - `DEPLOYMENT_PLAN.md`
 
-Seed demo credentials use `Password@123` for local accounts such as `admin@tailorcraftstudio.local` and `customer@tailorcraftstudio.local`.
+Seed demo credentials use `Password@123` for local accounts such as `admin@stitchinghub.local` and `customer@stitchinghub.local`.

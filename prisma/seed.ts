@@ -49,7 +49,7 @@ async function main() {
   ]);
 
   const adminUser = await prisma.user.upsert({
-    where: { email: "admin@tailorcraftstudio.local" },
+    where: { email: "admin@stitchinghub.local" },
     update: {
       firstName: "Aarohi",
       lastName: "Kapoor",
@@ -59,7 +59,7 @@ async function main() {
       role: { connect: { id: adminRole.id } },
     },
     create: {
-      email: "admin@tailorcraftstudio.local",
+      email: "admin@stitchinghub.local",
       firstName: "Aarohi",
       lastName: "Kapoor",
       phone: "+919810000001",
@@ -70,7 +70,7 @@ async function main() {
   });
 
   const designerUser = await prisma.user.upsert({
-    where: { email: "designer@tailorcraftstudio.local" },
+    where: { email: "designer@stitchinghub.local" },
     update: {
       firstName: "Naina",
       lastName: "Sethi",
@@ -80,7 +80,7 @@ async function main() {
       role: { connect: { id: designerRole.id } },
     },
     create: {
-      email: "designer@tailorcraftstudio.local",
+      email: "designer@stitchinghub.local",
       firstName: "Naina",
       lastName: "Sethi",
       phone: "+919810000002",
@@ -91,7 +91,7 @@ async function main() {
   });
 
   const tailorUser = await prisma.user.upsert({
-    where: { email: "tailor@tailorcraftstudio.local" },
+    where: { email: "tailor@stitchinghub.local" },
     update: {
       firstName: "Meera",
       lastName: "Joshi",
@@ -101,7 +101,7 @@ async function main() {
       role: { connect: { id: tailorRole.id } },
     },
     create: {
-      email: "tailor@tailorcraftstudio.local",
+      email: "tailor@stitchinghub.local",
       firstName: "Meera",
       lastName: "Joshi",
       phone: "+919810000003",
@@ -112,7 +112,7 @@ async function main() {
   });
 
   const customerUser = await prisma.user.upsert({
-    where: { email: "customer@tailorcraftstudio.local" },
+    where: { email: "customer@stitchinghub.local" },
     update: {
       firstName: "Ishita",
       lastName: "Malhotra",
@@ -122,7 +122,7 @@ async function main() {
       role: { connect: { id: customerRole.id } },
     },
     create: {
-      email: "customer@tailorcraftstudio.local",
+      email: "customer@stitchinghub.local",
       firstName: "Ishita",
       lastName: "Malhotra",
       phone: "+919810000004",
@@ -354,7 +354,7 @@ async function main() {
   });
 
   await prisma.order.upsert({
-    where: { orderNumber: "TCS-1001" },
+    where: { orderNumber: "SH-1001" },
     update: {
       customer: { connect: { id: customerUser.id } },
       consultation: { connect: { id: consultation.id } },
@@ -438,7 +438,7 @@ async function main() {
       },
     },
     create: {
-      orderNumber: "TCS-1001",
+      orderNumber: "SH-1001",
       customer: { connect: { id: customerUser.id } },
       consultation: { connect: { id: consultation.id } },
       designer: { connect: { id: designerUser.id } },
@@ -503,7 +503,7 @@ async function main() {
   });
 
   const sampleOrder = await prisma.order.findUniqueOrThrow({
-    where: { orderNumber: "TCS-1001" },
+    where: { orderNumber: "SH-1001" },
   });
 
   await prisma.fabricPickup.upsert({
@@ -524,7 +524,7 @@ async function main() {
   });
 
   await prisma.order.upsert({
-    where: { orderNumber: "TCS-1002" },
+    where: { orderNumber: "SH-1002" },
     update: {
       customer: { connect: { id: customerUser.id } },
       designer: { connect: { id: designerUser.id } },
@@ -578,7 +578,7 @@ async function main() {
       },
     },
     create: {
-      orderNumber: "TCS-1002",
+      orderNumber: "SH-1002",
       customer: { connect: { id: customerUser.id } },
       designer: { connect: { id: designerUser.id } },
       deliveryAddress: { connect: { id: primaryAddress.id } },
@@ -630,7 +630,7 @@ async function main() {
   });
 
   const deliveredOrder = await prisma.order.findUniqueOrThrow({
-    where: { orderNumber: "TCS-1002" },
+    where: { orderNumber: "SH-1002" },
   });
 
   await prisma.shipment.upsert({

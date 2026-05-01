@@ -22,7 +22,7 @@ export function TrackOrderForm() {
       <input
         value={orderNumber}
         onChange={(event) => setOrderNumber(event.target.value)}
-        placeholder="Enter order number, for example TCS-1001"
+        placeholder="Enter order number, for example SH-1001"
         className="min-w-0 flex-1 rounded-full border bg-[#fffaf6] px-5 py-3 text-sm text-foreground outline-none focus:border-accent"
       />
       <button type="submit" className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white">

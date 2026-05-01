@@ -34,7 +34,7 @@ export default async function SupportPage() {
         <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <SupportTicketForm authenticated={snapshot.authenticated} orders={snapshot.orders} />
 
-          <div className="space-y-4 rounded-[2rem] border bg-white/85 p-6 shadow-[0_24px_70px_rgba(55,34,23,0.08)] sm:p-8">
+          <div className="space-y-4 rounded-lg border bg-white/85 p-5 shadow-[0_18px_45px_rgba(55,34,23,0.08)] sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-3xl">Your requests</h2>
               {!snapshot.authenticated ? (
@@ -45,7 +45,7 @@ export default async function SupportPage() {
             </div>
             {snapshot.tickets.length ? (
               snapshot.tickets.map((ticket) => (
-                <div key={ticket.id} className="rounded-[1.5rem] border bg-[#fffaf6] p-5">
+                <div key={ticket.id} className="rounded-lg border bg-[#fffaf6] p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold">{ticket.subject}</p>
@@ -62,7 +62,7 @@ export default async function SupportPage() {
                 </div>
               ))
             ) : (
-              <div className="rounded-[1.5rem] border border-dashed bg-[#fffaf6] p-5 text-sm leading-7 text-muted">
+              <div className="rounded-lg border border-dashed bg-[#fffaf6] p-5 text-sm leading-7 text-muted">
                 No support requests yet.
               </div>
             )}
